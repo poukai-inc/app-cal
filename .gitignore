@@ -117,3 +117,6 @@ agents/devin-knowledge.json
 
 # pagefind
 _pagefind/
+
+# oh-my-claudecode local state
+.omc/
