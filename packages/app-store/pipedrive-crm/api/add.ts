@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { createDefaultInstallation } from "@calcom/app-store/_utils/installation";
-import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
+import { getServerSession } from "@calcom/lib/auth/getServerSession";
 import { WEBAPP_URL_FOR_OAUTH } from "@calcom/lib/constants";
 import { HttpError } from "@calcom/lib/http-error";
 

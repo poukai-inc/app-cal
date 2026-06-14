@@ -1,6 +1,6 @@
 import type { GetServerSidePropsContext } from "next";
 
-import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
+import { getServerSession } from "@calcom/lib/auth/getServerSession";
 import prisma from "@calcom/prisma";
 
 import { getAlbyKeys } from "../../lib/getAlbyKeys";

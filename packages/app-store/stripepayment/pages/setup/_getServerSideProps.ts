@@ -3,7 +3,7 @@ import stringify from "qs-stringify";
 import type Stripe from "stripe";
 import { z } from "zod";
 
-import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
+import { getServerSession } from "@calcom/lib/auth/getServerSession";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import prisma from "@calcom/prisma";
 
