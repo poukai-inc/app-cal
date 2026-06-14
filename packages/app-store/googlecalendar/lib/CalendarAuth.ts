@@ -1,7 +1,7 @@
 import { calendar_v3 } from "@googleapis/calendar";
 import { OAuth2Client, JWT } from "googleapis-common";
 
-import { triggerDelegationCredentialErrorWebhook } from "@calcom/features/webhooks/lib/triggerDelegationCredentialErrorWebhook";
+import { triggerDelegationCredentialErrorWebhook } from "@calcom/lib/webhooks/triggerDelegationCredentialErrorWebhook";
 import {
   CalendarAppDelegationCredentialClientIdNotAuthorizedError,
   CalendarAppDelegationCredentialInvalidGrantError,

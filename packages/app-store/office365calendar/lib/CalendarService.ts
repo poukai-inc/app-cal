@@ -1,6 +1,6 @@
 import { MSTeamsLocationType } from "@calcom/app-store/constants";
 import dayjs from "@calcom/dayjs";
-import { triggerDelegationCredentialErrorWebhook } from "@calcom/features/webhooks/lib/triggerDelegationCredentialErrorWebhook";
+import { triggerDelegationCredentialErrorWebhook } from "@calcom/lib/webhooks/triggerDelegationCredentialErrorWebhook";
 import { getLocation, getRichDescriptionHTML } from "@calcom/lib/CalEventParser";
 import {
   CalendarAppDelegationCredentialConfigurationError,
