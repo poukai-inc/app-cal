@@ -141,7 +141,6 @@ export class CredentialsRepository {
       select: {
         id: true,
         type: true,
-        key: true,
         userId: true,
         teamId: true,
         appId: true,
