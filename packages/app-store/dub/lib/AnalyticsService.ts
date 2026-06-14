@@ -1,6 +1,6 @@
 import { Dub } from "dub-package";
 
-import { CredentialRepository } from "@calcom/features/credentials/repositories/CredentialRepository";
+import { CredentialRepository } from "@calcom/lib/repositories/CredentialRepository";
 import logger from "@calcom/lib/logger";
 import type { AnalyticsService, SendEventProps } from "@calcom/types/AnalyticsService";
 import type { CredentialPayload } from "@calcom/types/Credential";

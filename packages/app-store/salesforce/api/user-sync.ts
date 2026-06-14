@@ -1,4 +1,4 @@
-import { CredentialRepository } from "@calcom/features/credentials/repositories/CredentialRepository";
+import { CredentialRepository } from "@calcom/lib/repositories/CredentialRepository";
 import { UserRepository } from "@calcom/features/users/repositories/UserRepository";
 import logger from "@calcom/lib/logger";
 import { prisma } from "@calcom/prisma";

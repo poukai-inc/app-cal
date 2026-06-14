@@ -1,4 +1,4 @@
-import { CredentialRepository } from "@calcom/features/credentials/repositories/CredentialRepository";
+import { CredentialRepository } from "@calcom/lib/repositories/CredentialRepository";
 import { prisma } from "@calcom/prisma";
 import type { SelectedCalendar } from "@calcom/prisma/client";
 import { credentialForCalendarServiceSelect } from "@calcom/prisma/selects/credential";

@@ -1,4 +1,4 @@
-import { CredentialRepository } from "@calcom/features/credentials/repositories/CredentialRepository";
+import { CredentialRepository } from "@calcom/lib/repositories/CredentialRepository";
 import { HttpError } from "@calcom/lib/http-error";
 import prisma from "@calcom/prisma";
 import type { Prisma } from "@calcom/prisma/client";
