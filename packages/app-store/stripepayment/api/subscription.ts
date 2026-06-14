@@ -1,5 +1,5 @@
 import { getPremiumMonthlyPlanPriceId } from "@calcom/app-store/stripepayment/lib/utils";
-import { getServerSession } from "@calcom/features/auth/lib/getServerSession";
+import { getServerSession } from "@calcom/lib/auth/getServerSession";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import { usernameCheck } from "@calcom/lib/server/username";
 import prisma from "@calcom/prisma";
