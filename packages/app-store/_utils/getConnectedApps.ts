@@ -1,5 +1,5 @@
 import { getUsersCredentialsIncludeServiceAccountKey } from "@calcom/app-store/delegationCredential";
-import { checkAdminOrOwner } from "@calcom/features/auth/lib/checkAdminOrOwner";
+import { checkAdminOrOwner } from "@calcom/lib/auth/checkAdminOrOwner";
 import getInstallCountPerApp from "@calcom/lib/apps/getInstallCountPerApp";
 import { buildNonDelegationCredentials } from "@calcom/lib/delegationCredential";
 import type { PrismaClient } from "@calcom/prisma";
