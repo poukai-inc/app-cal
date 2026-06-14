@@ -1,15 +1,14 @@
-import type { DialogProps as ControlledDialogProps } from "@calcom/features/components/controlled-dialog";
-import { Dialog } from "@calcom/features/components/controlled-dialog";
 import { Button } from "@calcom/ui/components/button";
-import { DialogContent, DialogFooter, DialogClose } from "@calcom/ui/components/dialog";
+import type { DialogProps } from "@calcom/ui/components/dialog";
+import { Dialog, DialogContent, DialogFooter, DialogClose } from "@calcom/ui/components/dialog";
 
 export function AccountDialog(
-  props: ControlledDialogProps & {
+  props: DialogProps & {
     handleSubmit: () => void;
   }
 ) {
   return (
-    <Dialog name="Account check" open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent
         type="creation"
         title="Connecting with MS Teams requires a work/school Microsoft account."
