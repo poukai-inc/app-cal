@@ -46,6 +46,16 @@ export class PrismaApiKeyRepository {
           },
         ],
       },
+      select: {
+        id: true,
+        userId: true,
+        teamId: true,
+        note: true,
+        createdAt: true,
+        expiresAt: true,
+        lastUsedAt: true,
+        appId: true,
+      },
       orderBy: { createdAt: "desc" },
     });
     return apiKeys.filter((apiKey) => {
