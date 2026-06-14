@@ -1,9 +1,20 @@
 import type { z } from "zod";
 
 import type { eventTypeMetaDataSchemaWithTypedApps } from "@calcom/app-store/zod-utils";
-import type { BookerEventForAppData } from "@calcom/features/bookings/types.server";
 
 import type { CommonAppData } from "./commonAppDataType";
+
+/**
+ * Server-safe subset of BookerEvent type.
+ * This type is used by server code that needs to access event type metadata
+ * without pulling in React/TRPC client dependencies. It lives here (app-store)
+ * because its `metadata` shape comes from `@calcom/app-store/zod-utils`.
+ */
+export type BookerEventForAppData = {
+  price: number;
+  currency: string;
+  metadata: z.infer<typeof eventTypeMetaDataSchemaWithTypedApps> | null;
+};
 
 export type EventTypeApps = NonNullable<
   NonNullable<z.infer<typeof eventTypeMetaDataSchemaWithTypedApps>>["apps"]
