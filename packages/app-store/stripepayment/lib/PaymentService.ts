@@ -1,10 +1,5 @@
-import Stripe from "stripe";
-import { v4 as uuidv4 } from "uuid";
-import z from "zod";
-
+import process from "node:process";
 import dayjs from "@calcom/dayjs";
-import { BookingRepository } from "@calcom/features/bookings/repositories/BookingRepository";
-import tasker from "@calcom/features/tasker";
 import { ErrorCode } from "@calcom/lib/errorCodes";
 import { ErrorWithCode } from "@calcom/lib/errors";
 import logger from "@calcom/lib/logger";
@@ -15,7 +10,9 @@ import type { Booking, Payment, PaymentOption, Prisma } from "@calcom/prisma/cli
 import type { EventTypeMetadata } from "@calcom/prisma/zod-utils";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
-
+import Stripe from "stripe";
+import { v4 as uuidv4 } from "uuid";
+import z from "zod";
 import { paymentOptionEnum } from "../zod";
 import { retrieveOrCreateStripeCustomerByEmail } from "./customer";
 import type { StripePaymentData, StripeSetupIntentData } from "./server";
@@ -230,6 +227,8 @@ class StripePaymentService implements IAbstractPaymentService {
         throw new Error("Stripe credentials not found");
       }
 
+      // Lazy import: app-store must not statically depend on @calcom/features (layering rule).
+      const { BookingRepository } = await import("@calcom/features/bookings/repositories/BookingRepository");
       const bookingRepository = new BookingRepository(prisma);
       const booking = await bookingRepository.findByIdIncludeUserAndAttendees(bookingId);
 
@@ -387,6 +386,9 @@ class StripePaymentService implements IAbstractPaymentService {
   ): Promise<void> {
     const delayMinutes = Number(process.env.AWAITING_PAYMENT_EMAIL_DELAY_MINUTES) || 15;
     const scheduledEmailAt = dayjs().add(delayMinutes, "minutes").toDate();
+
+    // Lazy import: app-store must not statically depend on @calcom/features (layering rule).
+    const { default: tasker } = await import("@calcom/features/tasker");
 
     // we give the user 15 minutes to complete the payment
     // if the payment is still not processed after 15 minutes, we send an awaiting payment email
