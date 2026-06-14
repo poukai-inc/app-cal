@@ -34,6 +34,16 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         where: {
           id,
         },
+        select: {
+          id: true,
+          userId: true,
+          teamId: true,
+          note: true,
+          createdAt: true,
+          expiresAt: true,
+          lastUsedAt: true,
+          appId: true,
+        },
       },
     },
   });

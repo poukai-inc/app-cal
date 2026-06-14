@@ -24,5 +24,15 @@ export const findKeyOfTypeHandler = async ({ ctx, input }: FindKeyOfTypeOptions)
       userId,
       appId,
     },
+    select: {
+      id: true,
+      userId: true,
+      teamId: true,
+      note: true,
+      createdAt: true,
+      expiresAt: true,
+      lastUsedAt: true,
+      appId: true,
+    },
   });
 };
