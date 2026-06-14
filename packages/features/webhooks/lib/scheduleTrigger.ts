@@ -1,7 +1,6 @@
 import { v4 } from "uuid";
 
 import { DailyLocationType, getHumanReadableLocationValue } from "@calcom/app-store/locations";
-import { selectOOOEntries } from "@calcom/app-store/zapier/api/subscriptions/listOOOEntries";
 import dayjs from "@calcom/dayjs";
 import { getCalEventResponses } from "@calcom/features/bookings/lib/getCalEventResponses";
 import tasker from "@calcom/features/tasker";
@@ -14,6 +13,8 @@ import type { Prisma, Webhook, Booking, ApiKey } from "@calcom/prisma/client";
 import { BookingStatus, WebhookTriggerEvents } from "@calcom/prisma/enums";
 import { bookingMetadataSchema } from "@calcom/prisma/zod-utils";
 import { DEFAULT_WEBHOOK_VERSION, type WebhookVersion } from "./interface/IWebhookRepository";
+
+export { deleteSubscription, listOOOEntries } from "@calcom/lib/webhooks/subscriptions";
 
 const SCHEDULING_TRIGGER: WebhookTriggerEvents[] = [
   WebhookTriggerEvents.MEETING_ENDED,
@@ -125,56 +126,6 @@ export async function addSubscription({
     log.error(
       `Error creating subscription for ${teamId ? `team ${teamId}` : `user ${userId}`}.`,
       safeStringify(error)
-    );
-  }
-}
-
-export async function deleteSubscription({
-  appApiKey,
-  webhookId,
-  appId,
-  account,
-}: {
-  appApiKey?: ApiKey;
-  webhookId: string;
-  appId: string;
-  account?: {
-    id: number;
-    name: string | null;
-    isTeam: boolean;
-  } | null;
-}) {
-  const userId = appApiKey ? appApiKey.userId : account && !account.isTeam ? account.id : null;
-  const teamId = appApiKey ? appApiKey.teamId : account && account.isTeam ? account.id : null;
-  try {
-    let where: Prisma.WebhookWhereInput = {};
-    if (teamId) {
-      where = { teamId };
-    } else {
-      where = { userId };
-    }
-
-    const deleteWebhook = await prisma.webhook.delete({
-      where: {
-        ...where,
-        appId: appId,
-        id: webhookId,
-      },
-    });
-
-    if (!deleteWebhook) {
-      throw new Error(`Unable to delete webhook ${webhookId}`);
-    }
-    return deleteWebhook;
-  } catch (err) {
-    const userId = appApiKey ? appApiKey.userId : account && !account.isTeam ? account.id : null;
-    const teamId = appApiKey ? appApiKey.teamId : account && account.isTeam ? account.id : null;
-
-    log.error(
-      `Error deleting subscription for user ${
-        teamId ? `team ${teamId}` : `userId ${userId}`
-      }, webhookId ${webhookId}`,
-      safeStringify(err)
     );
   }
 }
@@ -539,59 +490,6 @@ export async function updateTriggerForExistingBookings(
   );
 
   await Promise.all(promise);
-}
-
-export async function listOOOEntries(
-  appApiKey?: ApiKey,
-  account?: {
-    id: number;
-    name: string | null;
-    isTeam: boolean;
-  } | null
-) {
-  const userId = appApiKey ? appApiKey.userId : account && !account.isTeam ? account.id : null;
-  const teamId = appApiKey ? appApiKey.teamId : account && account.isTeam ? account.id : null;
-
-  try {
-    const where: Prisma.OutOfOfficeEntryWhereInput = {};
-    if (teamId) {
-      where.user = {
-        teams: {
-          some: {
-            teamId,
-          },
-        },
-      };
-    } else if (userId) {
-      where.userId = userId;
-    }
-
-    // early return
-    if (!where.userId && !where.user) {
-      return [];
-    }
-
-    const oooEntries = await prisma.outOfOfficeEntry.findMany({
-      where: {
-        ...where,
-      },
-      take: 3,
-      orderBy: {
-        id: "desc",
-      },
-      select: selectOOOEntries,
-    });
-
-    if (oooEntries.length === 0) {
-      return [];
-    }
-    return oooEntries;
-  } catch (err) {
-    log.error(
-      `Error retrieving list of ooo entries for user ${userId}. or teamId ${teamId}`,
-      safeStringify(err)
-    );
-  }
 }
 
 export async function cancelNoShowTasksForBooking({

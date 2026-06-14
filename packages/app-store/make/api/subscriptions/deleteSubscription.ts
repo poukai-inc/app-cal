@@ -1,4 +1,4 @@
-import { deleteSubscription } from "@calcom/features/webhooks/lib/scheduleTrigger";
+import { deleteSubscription } from "@calcom/lib/webhooks/subscriptions";
 import { defaultHandler } from "@calcom/lib/server/defaultHandler";
 import { defaultResponder } from "@calcom/lib/server/defaultResponder";
 import type { NextApiRequest, NextApiResponse } from "next";
