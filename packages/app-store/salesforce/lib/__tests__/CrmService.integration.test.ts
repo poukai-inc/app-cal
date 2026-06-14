@@ -59,7 +59,7 @@ vi.mock("../getSalesforceTokenLifetime", () => ({
   getSalesforceTokenLifetime: vi.fn().mockResolvedValue(7200),
 }));
 
-vi.mock("@calcom/features/credentials/repositories/CredentialRepository", () => ({
+vi.mock("@calcom/lib/repositories/CredentialRepository", () => ({
   CredentialRepository: {
     updateWhereId: vi.fn().mockResolvedValue({}),
   },
