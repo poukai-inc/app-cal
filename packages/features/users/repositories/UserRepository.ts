@@ -22,7 +22,7 @@ const getParsedTeam = <T>(team: T): T => team;
 
 export type { UserWithLegacySelectedCalendars } from "@calcom/lib/server/withSelectedCalendars";
 export { withSelectedCalendars };
-export type UserAdminTeams = number[];
+export type { UserAdminTeams } from "@calcom/lib/users/UserAdminTeams";
 
 export type SessionUser = {
   id: number;
