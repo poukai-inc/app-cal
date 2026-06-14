@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import z from "zod";
 
 import { getCustomerAndCheckoutSession } from "@calcom/app-store/stripepayment/lib/getCustomerAndCheckoutSession";
-import sendVerificationRequest from "@calcom/features/auth/lib/sendVerificationRequest";
+import sendVerificationRequest from "@calcom/lib/auth/sendVerificationRequest";
 import { WEBAPP_URL } from "@calcom/lib/constants";
 import { HttpError } from "@calcom/lib/http-error";
 import logger from "@calcom/lib/logger";
