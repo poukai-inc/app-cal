@@ -1,6 +1,7 @@
 import short from "short-uuid";
 import { v5 as uuidv5 } from "uuid";
 
+import { deleteMeeting } from "@calcom/app-store/_utils/deleteMeeting";
 import { DailyLocationType } from "@calcom/app-store/constants";
 import { getDailyAppKeys } from "@calcom/app-store/dailyvideo/lib/getDailyAppKeys";
 import { getVideoAdapters } from "@calcom/app-store/getVideoAdapters";
@@ -142,25 +143,6 @@ const updateMeeting = async (
     updatedEvent: updatedMeeting,
     originalEvent: calEvent,
   };
-};
-
-const deleteMeeting = async (
-  credential: CredentialPayload | CredentialForCalendarService | null,
-  uid: string
-): Promise<unknown> => {
-  if (credential) {
-    const videoAdapter = (await getVideoAdapters([credential]))[0];
-    log.debug(
-      "Calling deleteMeeting for",
-      safeStringify({ credential: getPiiFreeCredential(credential), uid })
-    );
-    // There are certain video apps with no video adapter defined. e.g. riverby,whereby
-    if (videoAdapter) {
-      return videoAdapter.deleteMeeting(uid);
-    }
-  }
-
-  return Promise.resolve({});
 };
 
 // @TODO: This is a temporary solution to create a meeting with cal.com video as fallback url
