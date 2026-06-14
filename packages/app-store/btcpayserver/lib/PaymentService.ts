@@ -1,16 +1,12 @@
-import { v4 as uuidv4 } from "uuid";
-import type z from "zod";
-
 import { ErrorCode } from "@calcom/lib/errorCodes";
 import logger from "@calcom/lib/logger";
 import { safeStringify } from "@calcom/lib/safeStringify";
-import type { IBookingPaymentRepository } from "@calcom/features/bookings/repositories/BookingPaymentRepository.interface";
-import { PrismaBookingPaymentRepository } from "@calcom/features/bookings/repositories/PrismaBookingPaymentRepository";
-import type { Booking, Payment, PaymentOption } from "@calcom/prisma/client";
-import type { Prisma } from "@calcom/prisma/client";
+import type { Booking, Payment, PaymentOption, Prisma } from "@calcom/prisma/client";
+import type { IBookingPaymentRepository } from "@calcom/types/BookingPaymentRepository";
 import type { CalendarEvent } from "@calcom/types/Calendar";
 import type { IAbstractPaymentService } from "@calcom/types/PaymentService";
-
+import { v4 as uuidv4 } from "uuid";
+import type z from "zod";
 import appConfig from "../config.json";
 import { btcpayCredentialKeysSchema } from "./btcpayCredentialKeysSchema";
 import { convertFromSmallestToPresentableCurrencyUnit } from "./currencyOptions";
@@ -38,12 +34,9 @@ interface BTCPayInvoice {
 
 class BTCPayServerPaymentService implements IAbstractPaymentService {
   private credentials: z.infer<typeof btcpayCredentialKeysSchema> | null;
-  private bookingPaymentRepository: IBookingPaymentRepository;
+  private bookingPaymentRepository: IBookingPaymentRepository | undefined;
 
-  constructor(
-    credentials: { key: Prisma.JsonValue },
-    bookingPaymentRepository: IBookingPaymentRepository = new PrismaBookingPaymentRepository()
-  ) {
+  constructor(credentials: { key: Prisma.JsonValue }, bookingPaymentRepository?: IBookingPaymentRepository) {
     const keyParsing = btcpayCredentialKeysSchema.safeParse(credentials.key);
     if (keyParsing.success) {
       this.credentials = keyParsing.data;
@@ -51,6 +44,19 @@ class BTCPayServerPaymentService implements IAbstractPaymentService {
       this.credentials = null;
     }
     this.bookingPaymentRepository = bookingPaymentRepository;
+  }
+
+  // Lazily resolve the concrete repository so this app-store package does not
+  // statically import from @calcom/features (enforced layering: app-store must
+  // not depend on features). An injected instance always takes precedence.
+  private async getBookingPaymentRepository(): Promise<IBookingPaymentRepository> {
+    if (!this.bookingPaymentRepository) {
+      const { PrismaBookingPaymentRepository } = await import(
+        "@calcom/features/bookings/repositories/PrismaBookingPaymentRepository"
+      );
+      this.bookingPaymentRepository = new PrismaBookingPaymentRepository();
+    }
+    return this.bookingPaymentRepository;
   }
 
   private async BTCPayApiCall(endpoint: string, options: RequestInit = {}) {
@@ -122,7 +128,8 @@ class BTCPayServerPaymentService implements IAbstractPaymentService {
         { method: "POST", body: JSON.stringify(invoiceRequest) }
       )) as BTCPayInvoice;
 
-      const paymentData = await this.bookingPaymentRepository.createPaymentRecord({
+      const bookingPaymentRepository = await this.getBookingPaymentRepository();
+      const paymentData = await bookingPaymentRepository.createPaymentRecord({
         uid,
         app: { connect: { slug: appConfig.slug } },
         booking: { connect: { id: bookingId } },
