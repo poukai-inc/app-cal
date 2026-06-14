@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { createGoogleCalendarServiceWithGoogleType } from "@calcom/app-store/googlecalendar/lib/CalendarService";
 import { CredentialRepository } from "@calcom/features/credentials/repositories/CredentialRepository";
-import { buildCredentialCreateData } from "@calcom/features/credentials/services/CredentialDataService";
+import { buildCredentialCreateData } from "@calcom/lib/credentials/CredentialDataService";
 import { renewSelectedCalendarCredentialId } from "@calcom/lib/connectedCalendar";
 import {
   GOOGLE_CALENDAR_SCOPES,
