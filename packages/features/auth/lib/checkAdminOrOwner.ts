@@ -1,5 +1,3 @@
-import { MembershipRole } from "@calcom/prisma/enums";
-
-export function checkAdminOrOwner(role: MembershipRole | null | undefined): role is "OWNER" | "ADMIN" {
-  return role === MembershipRole.OWNER || role === MembershipRole.ADMIN;
-}
+// Re-exported from @calcom/lib so that lower layers (e.g. @calcom/app-store) can
+// consume this pure helper without importing from @calcom/features.
+export { checkAdminOrOwner } from "@calcom/lib/auth/checkAdminOrOwner";
